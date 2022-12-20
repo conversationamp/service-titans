@@ -1,0 +1,78 @@
+<center>Didn't receive it? Click<a id="resend"> here</a> to resend<br>
+<div style="margin-top:10px"><a id="edit" >Edit phone number</a></div>
+<div id="uu" style="margin-top:10px;display:none;">
+<div style="margin-top:10px;"><a id="newsend"  >Send Code</a></div>
+</div></center>
+
+
+<script>
+
+
+var val = Math.floor(1000 + Math.random() * 9000);
+document.getElementById("demo").innerHTML = val;
+
+setTimeout(myFunction, 3000);
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $(".ghl-button.ghl-next-button.ghl-mobile-next").click(function(){
+            // Your Twilio credentials
+if($('#nextButton').length>0){
+          send();
+}        
+});
+});
+
+
+
+function send(){
+  var SID = "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            var Key = "xxxxxxxxxxxxxxxxxxxxxxxx"
+
+            $.ajax({
+                type: 'POST',
+                url: 'https://api.twilio.com/2010-04-01/Accounts/' + SID + '/Messages.json',
+                data: {
+                    "To" : document.getElementsByName("phone")[0].value,
+                    "From" : "+xxxxxxxxxxx",
+                    "Body" : val
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader ("Authorization", "Basic " + btoa(SID + ':' + Key));
+                },
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+
+}
+
+
+</script>
+<script>
+
+var bo= $('#codeBox1').val() + $('#codeBox2').val() + $('#codeBox3').val() + $('#codeBox4').val();
+
+$(document).on('click','#nextButton',function(e){
+if(val.toString() === $('#codeBox1').val() + $('#codeBox2').val() + $('#codeBox3').val() + $('#codeBox4').val() ){return true;}else{e.preventDefault();alert("wrong code");return false;}
+ 
+}); 
+$("#resend").click(function(){
+         send();
+        });
+
+$("#edit").click(function(){
+$("[name='phone']").prependTo('#uu');
+$('#uu').toggle();
+$('#newsend').click(function(){$("#resend").click();$('#uu').hide();});
+});
+
+$("#header").html("<center>"+head+"</center>")
+
+//$("#header").html("<center>"+head+"("+$('[name="phone"]').val().substr($('[name="phone"]').val().length-4)+")"+"</center>");
+</script>
